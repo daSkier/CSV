@@ -97,7 +97,7 @@ public final class CSVSyncEncoder {
         }
         try objects.forEach(encoder.encode)
 
-        return Data(rows.joined(separator: [10]))
+        return Data(rows.joined(separator: [configuration.cellSeparator]))
     }
 }
 
@@ -225,7 +225,7 @@ public final class CSVSyncDecoder {
     /// - Throws: Errors that occur during the decoding proccess.
     public func decode<D>(_ type: D.Type = D.self, from data: Data)throws -> [D] where D: Decodable {
         var result: [D] = []
-        result.reserveCapacity(data.lazy.split(separator: 10).count)
+        result.reserveCapacity(data.lazy.split(separator: configuration.cellSeparator).count)
 
         let decoder = AsyncDecoder(decoding: type, path: [], decodingOptions: self.decodingOptions) { decoded in
             guard let typed = decoded as? D else {
